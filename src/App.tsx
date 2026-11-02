@@ -1,35 +1,44 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { flushSync } from 'react-dom'
+import portrait from './assets/luqman-portrait.jpg'
 import './App.css'
+import './dark.css'
 
-function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+const github = 'https://github.com/Swiggity-wonky'
+const projects = [
+  { id: '01', name: 'AU Lost & Found', repo: 'AU-Lost-Found', category: 'Software', type: 'FULL-STACK APPLICATION', description: 'Connecting lost belongings with their owners. A web application with item reporting, claims, matching, and notifications.', tags: ['C#', 'ASP.NET', 'Web application'], visual: 'lost' },
+  { id: '02', name: 'Dual-Axis Solar Tracker', repo: 'IoT-Based-Dual-Axis-Solar-Tracking-System', category: 'Embedded & IoT', type: 'CONNECTED HARDWARE', description: 'Following the sun through code. A dual-axis tracking system bringing together sensors, motor control, and a connected web interface.', tags: ['C++', 'ESP32', 'Raspberry Pi'], visual: 'solar' },
+  { id: '03', name: 'Car Workshop App', repo: 'CarWorkshopApp', category: 'Software', type: 'CROSS-PLATFORM APPLICATION', description: 'Making workshop administration more manageable, with task booking, task overviews, and invoice management in a .NET MAUI application.', tags: ['C#', '.NET MAUI', 'MVVM'], visual: 'workshop' },
+  { id: '04', name: 'HMD', repo: 'HMD', category: 'Embedded & IoT', type: 'EMBEDDED SYSTEM', description: 'Working close to the hardware. An embedded C project built around PSoC, with analog input, I²C, and UART interfaces.', tags: ['C', 'PSoC', 'Embedded systems'], visual: 'hmd' },
+]
+const skillGroups = [
+  { title: 'Programming', skills: 'C · C++ · C# · JavaScript · HTML · CSS' },
+  { title: 'Data & databases', skills: 'SQL · Databases' },
+  { title: 'Embedded systems & electronics', skills: 'Microcontrollers · Embedded / IoT · Digital electronics' },
+  { title: 'Hardware & operating systems', skills: 'PC hardware · Windows 11' },
+  { title: 'Tools & collaboration', skills: 'Git · GitHub · Excel · Word · Outlook' },
+]
+function Arrow() { return <span aria-hidden="true">↗</span> }
+function ProjectVisual({ kind }: { kind: string }) {
+  if (kind === 'lost') return <div className="preview lost-preview" aria-hidden="true"><div className="mini-browser"><div className="browser-bar"><span className="browser-dots">● ● ●</span><span>AU / Lost & Found</span><span>＋</span></div><div className="lost-content"><div className="mini-nav">AU<span>Lost. Found. Reconnected.</span></div><h4>A little help.<br/>A happy reunion.</h4><div className="mini-search">Search for something lost <span>⌕</span></div><div className="item-tiles"><div><span className="item-icon">♧</span><small>Everyday essentials</small></div><div><span className="item-icon">⌘</span><small>Something familiar</small></div><div><span className="item-icon">♙</span><small>Back where it belongs</small></div></div></div></div><span className="preview-caption">01 — CONNECTING PEOPLE & BELONGINGS</span></div>
+  if (kind === 'solar') return <div className="preview solar-preview" aria-hidden="true"><div className="sun">☼</div><div className="sun-path"/><div className="solar-assembly"><div className="solar-panel">{Array.from({length: 12}, (_,i)=><i key={i}/>)}</div><div className="solar-post"/><div className="solar-base"/></div><div className="diagram-label top-label">SUN POSITION <span>↘</span></div><div className="diagram-label bottom-label"><span className="signal-dot"/> DUAL-AXIS TRACKING</div><span className="preview-caption">02 — ENGINEERED TO FOLLOW THE LIGHT</span></div>
+  if (kind === 'workshop') return <div className="preview workshop-preview" aria-hidden="true"><div className="workshop-window"><aside><b>W<span>↗</span></b><i/><i/><i/></aside><div className="workshop-body"><small>WORKSHOP / OVERVIEW</small><h4>A good day’s work.</h4><div className="workshop-stats"><div>Tasks<span>Overview</span></div><div>Bookings<span>Organised</span></div><div>Invoices<span>In one place</span></div></div><div className="table-row"><b>Workshop tasks</b><span>STATUS</span></div><div className="table-row">Service & maintenance <em>Booked</em></div><div className="table-row">Vehicle inspection <em>In progress</em></div><div className="table-row">Invoice management <em>Ready</em></div></div></div><span className="preview-caption">03 — FROM BOOKING TO INVOICE</span></div>
+  return <div className="preview hmd-preview" aria-hidden="true"><div className="circuit-lines"><i/><i/><i/><i/></div><div className="chip"><span>CYPRESS</span><strong>PSoC</strong><small>PROGRAMMABLE SYSTEM-ON-CHIP</small></div><span className="chip-label label-one">ANALOG IN</span><span className="chip-label label-two">I²C / UART</span><span className="preview-caption">04 — WHERE SOFTWARE MEETS HARDWARE</span></div>
 }
-
+function App() {
+  const [filter, setFilter] = useState('All projects')
+  const [menuOpen, setMenuOpen] = useState(false)
+  return <>
+    <a className="skip-link" href="#main">Skip to content</a>
+    <header className="header"><a href="#" className="wordmark" aria-label="Luqman Nur home">ln<span>.</span></a><nav aria-label="Main navigation" className={menuOpen ? 'open' : ''}><a href="#projects" onClick={()=>setMenuOpen(false)}>Projects</a><a href="#about" onClick={()=>setMenuOpen(false)}>About</a><a href="#skills" onClick={()=>setMenuOpen(false)}>Skills</a><a href="#contact" className="nav-contact" onClick={()=>setMenuOpen(false)}>Let’s connect <Arrow/></a></nav><button className="menu-button" aria-label="Toggle navigation" aria-expanded={menuOpen} onClick={()=>setMenuOpen(!menuOpen)}>{menuOpen ? 'Close' : 'Menu'}</button></header>
+    <main id="main">
+      <section className="hero"><div className="hero-copy"><div className="eyebrow"><span className="signal-dot"/> A PORTFOLIO OF CODE & CURIOSITY</div><h1>Thoughtful code.<br/>Real-world <span>impact.</span></h1><p className="hero-intro">Hi, I’m <strong>Luqman Nur.</strong> I’m an engineering student exploring software, electronics, and connected systems, with a strong interest in cybersecurity.</p><div className="hero-actions"><a className="button primary" href="#projects">Explore my work <span>↓</span></a><button className="button secondary" onClick={()=>{ flushSync(()=>setFilter('All projects')); window.print() }}>Print / save CV <span aria-hidden="true">↧</span></button></div><div className="hero-footnote"><span>SOFTWARE</span><i/><span>EMBEDDED SYSTEMS</span><i/><span>CYBER-PHYSICAL SYSTEMS</span></div></div><figure className="hero-portrait"><img src={portrait} alt="Portrait of Luqman Abdirisak Ali Nur" width="1280" height="1920" fetchPriority="high"/><figcaption><span>Luqman Nur</span><span>Software & embedded systems</span></figcaption></figure></section>
+      <div className="discipline-bar"><span>Building across the stack</span><div>C# / .NET <i>✳</i> C / C++ <i>✳</i> Web applications <i>✳</i> Connected hardware</div></div>
+      <section id="projects" className="projects-section"><div className="section-top"><div><div className="eyebrow">01 / SELECTED WORK</div><h2>From idea to implementation<span>.</span></h2></div><a href={github} target="_blank" rel="noreferrer" className="text-link">All repositories <Arrow/></a></div><div className="project-toolbar"><div className="filters" role="group" aria-label="Filter projects">{['All projects','Software','Embedded & IoT'].map(item=><button key={item} aria-pressed={filter===item} className={filter===item?'active':''} onClick={()=>setFilter(item)}>{item}{item==='All projects' && <span>04</span>}</button>)}</div><span className="project-count" aria-live="polite">{projects.filter(p=>filter==='All projects'||p.category===filter).length} projects to explore</span></div><div className="project-grid">{projects.filter(p=>filter==='All projects'||p.category===filter).map(project=><article className="project-card" key={project.id}><a className="visual-link" href={`${github}/${project.repo}`} target="_blank" rel="noreferrer" aria-label={`Explore ${project.name} on GitHub`}><ProjectVisual kind={project.visual}/><span className="visual-arrow"><Arrow/></span></a><div className="project-meta"><span>{project.type}</span><span>/{project.id}</span></div><h3><a href={`${github}/${project.repo}`} target="_blank" rel="noreferrer">{project.name} <Arrow/></a></h3><p>{project.description}</p><p className="print-source">github.com/Swiggity-wonky/{project.repo}</p><div className="tags">{project.tags.map(tag=><span key={tag}>{tag}</span>)}</div></article>)}</div></section>
+      <section id="about" className="about-section"><div><div className="eyebrow">02 / A LITTLE ABOUT ME</div><h2>Curiosity is the<br/>common thread<span>.</span></h2></div><div className="about-copy"><p>I’m Luqman Abdirisak Ali Nur, an engineering student with a background bridging software and electronics. I have completed 90 ECTS of the Software Technology diploma engineering programme at Aarhus University, with studies in software development, digital electronics, and hardware.</p><p>I’m curious and analytical, and enjoy understanding how systems connect. My team semester projects include a full-stack lost-and-found platform and a dual-axis solar tracker, giving me hands-on experience with software, electronics, and cyber-physical systems.</p><a className="text-link" href={github} target="_blank" rel="noreferrer">Find me on GitHub <Arrow/></a></div></section>
+      <section id="skills" className="skills-section"><div className="eyebrow">03 / MY TOOLKIT</div><div className="skills-heading"><h2>Different tools. Same care<span>.</span></h2><p>Technical skills & areas of interest.</p></div><div className="skill-rows">{skillGroups.map((group, index)=><div key={group.title}><span>{String(index + 1).padStart(2, '0')}</span><h3>{group.title}</h3><p>{group.skills}</p></div>)}</div><div className="skills-notes"><div><h3>Areas of interest</h3><p>Cybersecurity · Cyber-physical & energy systems · Industrial protocols: Modbus & MQTT</p></div><div><h3>Languages</h3><p>Danish (native) · English (professional) · Somali (native)</p></div></div></section>
+      <section id="contact" className="contact-section"><div className="eyebrow">04 / WHAT’S NEXT?</div><div className="contact-content"><h2>Good things start<br/>with a <em>conversation.</em></h2><div><p>Have a project in mind, a question about my work,<br className="desktop-break"/> or an interesting opportunity? Let’s connect.</p><a className="button primary" href={github} target="_blank" rel="noreferrer">Connect on GitHub <Arrow/></a></div></div></section>
+    </main><footer><a href="#" className="footer-name">Luqman Nur<span>.</span></a><span>Built with care. Driven by curiosity.</span><a href="#main">Back to top ↑</a></footer>
+  </>
+}
 export default App
